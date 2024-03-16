@@ -1,0 +1,17 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: cnr-postgres
+spec:
+  forProvider:
+    chart:
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.0.0
+    namespace: cloud-native-rejekts
+    values:
+      primary:
+        persistence:
+          size: 1Gi
+  providerConfigRef:
+    name: bitnami-services-provider-helm

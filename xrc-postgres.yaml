@@ -1,0 +1,8 @@
+apiVersion: timosalm.de/v1alpha1
+kind: PostgreSQLDatabase
+metadata:
+  name: cnr-postgres
+spec:
+  storage: 2
+  writeConnectionSecretToRef:
+    name: cnr-postgres-connection-secrets
