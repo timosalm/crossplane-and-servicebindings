@@ -76,6 +76,10 @@ spec:
       - fromConnectionSecretKey: database
       - fromConnectionSecretKey: username
       - fromConnectionSecretKey: password
+      - name: type
+        value: postgresql
+      - name: provider
+        value: bitnami
       patches:
       - type: FromCompositeFieldPath
         fromFieldPath: spec.storage
@@ -146,9 +150,18 @@ spec:
             fmt: '%s-postgresql'
             type: Format
           type: string
-      - fromFieldPath: metadata.name
+      - fromFieldPath: metadata.uid
         toFieldPath: spec.writeConnectionSecretToRef.name
         transforms:
         - type: string
           string:
             fmt: "%s-database-secret"
+      - type: ToCompositeFieldPath
+        fromFieldPath: metadata.uid
+        toFieldPath: status.binding.name
+      - type: ToCompositeFieldPath
+        fromFieldPath: metadata.uid
+        toFieldPath: spec.writeConnectionSecretToRef.name
+      - type: ToCompositeFieldPath
+        fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+        toFieldPath: spec.writeConnectionSecretToRef.namespace

@@ -13,5 +13,3 @@ spec:
       primary:
         persistence:
           size: 1Gi
-  providerConfigRef:
-    name: bitnami-services-provider-helm

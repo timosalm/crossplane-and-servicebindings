@@ -22,8 +22,6 @@ spec:
           auth:
             username: default
             database: inclusion
-  providerConfigRef:
-    name: bitnami-services-provider-helm    
   connectionDetails:
   - apiVersion: v1
     kind: Service
