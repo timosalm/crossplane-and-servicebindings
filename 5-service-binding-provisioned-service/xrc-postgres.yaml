@@ -1,6 +1,6 @@
 apiVersion: timosalm.de/v1alpha1
 kind: PostgreSQLDatabase
 metadata:
-  name: cnr-postgres
+  name: csb-postgres
 spec:
   storage: 2

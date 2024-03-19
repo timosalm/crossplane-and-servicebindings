@@ -1,14 +1,14 @@
 apiVersion: helm.crossplane.io/v1beta1
 kind: Release
 metadata:
-  name: cnr-postgres
+  name: csb-postgres-1
 spec:
   forProvider:
     chart:
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
       version: 13.0.0
-    namespace: cloud-native-rejekts
+    namespace: $DEMO_NS
     values:
       primary:
         persistence:

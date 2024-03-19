@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: cnr-inclusion
+  name: csb-inclusion
 spec:
   template:
     metadata:
@@ -17,25 +17,25 @@ spec:
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: cnr-postgres-connection-secrets
+              name: csb-postgres-connection-secrets
               key: username
         - name: POSTGRES_HOST
           valueFrom:
             secretKeyRef:
-              name: cnr-postgres-connection-secrets
+              name: csb-postgres-connection-secrets
               key: host
         - name: POSTGRES_PORT
           valueFrom:
             secretKeyRef:
-              name: cnr-postgres-connection-secrets
+              name: csb-postgres-connection-secrets
               key: port
         - name: POSTGRES_DATABASE
           valueFrom:
             secretKeyRef:
-              name: cnr-postgres-connection-secrets
+              name: csb-postgres-connection-secrets
               key: database
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: cnr-postgres-connection-secrets
+              name: csb-postgres-connection-secrets
               key: password

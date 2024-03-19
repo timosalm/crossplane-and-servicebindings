@@ -1,11 +1,11 @@
 apiVersion: timosalm.de/v1alpha1
 kind: xPostgreSQLDatabase
 metadata:
-  name: cnr-postgres
+  name: csb-postgres
   labels: 
-    crossplane.io/claim-namespace: cloud-native-rejekts
+    crossplane.io/claim-namespace: $DEMO_NS
 spec:
   storage: 2
   writeConnectionSecretToRef:
-    name: cnr-postgres-connection-secrets
-    namespace: cloud-native-rejekts
+    name: csb-postgres-connection-secrets
+    namespace: $DEMO_NS

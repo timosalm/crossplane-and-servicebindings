@@ -1,14 +1,14 @@
 apiVersion: helm.crossplane.io/v1beta1
 kind: Release
 metadata:
-  name: cnr-postgres
+  name: csb-postgres-2
 spec:
   forProvider:
     chart:
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
       version: 13.0.0
-    namespace: cloud-native-rejekts
+    namespace: $DEMO_NS
     values:
       primary:
         persistence:
@@ -25,34 +25,34 @@ spec:
   connectionDetails:
   - apiVersion: v1
     kind: Service
-    name: cnr-postgres-postgresql
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-postgresql
+    namespace: $DEMO_NS
     fieldPath: spec.clusterIP
     toConnectionSecretKey: host
   - apiVersion: v1
     kind: Service
-    name: cnr-postgres-postgresql
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-postgresql
+    namespace: $DEMO_NS
     fieldPath: spec.ports[0].port
     toConnectionSecretKey: port
   - apiVersion: v1
     kind: Secret
-    name: cnr-postgres-postgresql
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-postgresql
+    namespace: $DEMO_NS
     fieldPath: data.password
     toConnectionSecretKey: password
   - apiVersion: apps/v1
     kind: StatefulSet
-    name: cnr-postgres-postgresql
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-postgresql
+    namespace: $DEMO_NS
     fieldPath: spec.template.spec.containers[0].env[4].value
     toConnectionSecretKey: username
   - apiVersion: apps/v1
     kind: StatefulSet
-    name: cnr-postgres-postgresql
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-postgresql
+    namespace: $DEMO_NS
     fieldPath: spec.template.spec.containers[0].env[7].value
     toConnectionSecretKey: database
   writeConnectionSecretToRef:
-    name: cnr-postgres-connection-secrets
-    namespace: cloud-native-rejekts
+    name: csb-postgres-2-connection-secrets
+    namespace: $DEMO_NS
