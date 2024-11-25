@@ -1,5 +1,7 @@
 # The Magic of Backing Service Provisioning and Consumption With Crossplane and ServiceBindings
 
+[Slides](slides.pdf)
+
 ## Prerequisites
 - Docker
 - Crossplane >=v1.13
