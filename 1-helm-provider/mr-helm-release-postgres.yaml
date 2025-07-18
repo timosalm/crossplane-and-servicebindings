@@ -7,7 +7,7 @@ spec:
     chart:
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
-      version: 13.0.0
+      version: 17.5.0
     namespace: $DEMO_NS
     values:
       primary:
