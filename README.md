@@ -4,44 +4,31 @@
 
 ## Prerequisites
 - Docker
-- Crossplane >=v1.13
+- Crossplane >= v1.13 < v.2.0
 - Crossplane Helm provider installed
-- Knative Serving
-- envsubst
-
-Build and push a container image for the sample application
-```
-docker login <container-registry-hostname>
-./build-and-push-app-container.sh <container-image-tag>
-```
-
-Create a namespace for the samples
-```
-kubectl create ns crossplane-and-servicebindings
-kubectl config set-context --current --namespace=crossplane-and-servicebindings
-export DEMO_NS=crossplane-and-servicebindings
-```
+- [Service Binding for Kubernetes](https://github.com/servicebinding/runtime)
 
 ## Providers and Managed Resources
 ```
 (cd 1-helm-provider && ./apply.sh)
 kubectl get providers
-cat 1-helm-provider/mr-helm-release-postgres.yaml
-kubectl get release.helm.crossplane.io csb-postgres-1
-kubectl get pods
-kubectl get secrets
+cat 1-helm-provider/helm-release-postgres.yaml
+kubectl get release.helm.crossplane.io postgres-1 -n crossplane-and-servicebindings-1
+kubectl get pods -n crossplane-and-servicebindings-1
+kubectl get secrets -n crossplane-and-servicebindings-1
 (cd 1-helm-provider && ./clean-up.sh)
 ```
 
 ## Providers and Managed Resources with connection secret
 ```
 (cd 2-helm-provider-connection-secret && ./apply.sh)
-cat 2-helm-provider-connection-secret/mr-helm-release-postgres.yaml
-kubectl get secrets
-cat 2-helm-provider-connection-secret/kservice-app-in-memory.yaml
-kubectl get route cnr-inclusion-in-memory
-cat 2-helm-provider-connection-secret/kservice-app.yaml
-kubectl get route csb-inclusion
+cat 2-helm-provider-connection-secret/helm-release-postgres.yaml
+kubectl get secrets -n crossplane-and-servicebindings-2
+cat 2-helm-provider-connection-secret/deployment-app-in-memory.yaml
+kubectl port-forward pod/$(kubectl get pod -l app=inclusion-in-memory -o jsonpath='{.items[0].metadata.name}' -n crossplane-and-servicebindings-2) 8080:8080 -n crossplane-and-servicebindings-2
+
+cat 2-helm-provider-connection-secret/deployment-app.yaml
+kubectl port-forward pod/$(kubectl get pod -l app=inclusion -o jsonpath='{.items[0].metadata.name}' -n crossplane-and-servicebindings-2) 8080:8080 -n crossplane-and-servicebindings-2
 (cd 2-helm-provider-connection-secret && ./clean-up.sh)
 cd ..
 ```
@@ -51,7 +38,9 @@ cd ..
 (cd 3-claims && ./apply.sh)
 cat 3-claims/xrc-postgres.yaml 
 cat 3-claims/composition-postgres.yaml
-kubectl get route csb-inclusion
+cat 3-claims/xrd-postgres.yaml
+kubectl get xPostgreSQLDatabase
+kubectl port-forward pod/$(kubectl get pod -l app=inclusion -o jsonpath='{.items[0].metadata.name}' -n crossplane-and-servicebindings-3) 8080:8080 -n crossplane-and-servicebindings-3
 (cd 3-claims && ./clean-up.sh)
 ```
 
@@ -59,10 +48,10 @@ kubectl get route csb-inclusion
 ```
 (cd 4-service-binding-direct-secret && ./apply.sh)
 cat 4-service-binding-direct-secret/composition-postgres.yaml
-kubectl get secret
+kubectl get secret -n crossplane-and-servicebindings-4
 cat 4-service-binding-direct-secret/service-binding.yaml
-kubectl get servicebinding
-kubectl get route csb-inclusion
+kubectl get servicebinding -n crossplane-and-servicebindings-4
+kubectl port-forward pod/$(kubectl get pod -l app=inclusion -o jsonpath='{.items[0].metadata.name}' -n crossplane-and-servicebindings-4) 8080:8080 -n crossplane-and-servicebindings-4
 (cd 4-service-binding-direct-secret && ./clean-up.sh)
 ```
 
@@ -72,10 +61,10 @@ kubectl get route csb-inclusion
 cat 5-service-binding-provisioned-service/xrd-postgres.yaml
 cat 5-service-binding-provisioned-service/composition-postgres.yaml
 cat 5-service-binding-provisioned-service/xrc-postgres.yaml
-cat 5-service-binding-provisioned-service/kservice-app.yaml
+cat 5-service-binding-provisioned-service/deployment-app.yaml
 cat 5-service-binding-provisioned-service/service-binding.yaml
-kubectl get servicebinding
-kubectl get route csb-inclusion
+kubectl get servicebinding -n crossplane-and-servicebindings-5
+kubectl port-forward pod/$(kubectl get pod -l app=inclusion -o jsonpath='{.items[0].metadata.name}' -n crossplane-and-servicebindings-5) 8080:8080 -n crossplane-and-servicebindings-5
 (cd 5-service-binding-provisioned-service && ./clean-up.sh)
 ```
 

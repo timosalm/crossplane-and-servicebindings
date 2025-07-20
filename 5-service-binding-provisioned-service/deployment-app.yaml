@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inclusion
+  namespace: crossplane-and-servicebindings-5
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inclusion
+  template:
+    metadata:
+      labels:
+        app: inclusion
+    spec:
+      containers:
+        - name: user-container
+          image: ghcr.io/timosalm/emoji-inclusion:inclusion

@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inclusion-in-memory
+  namespace: crossplane-and-servicebindings-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inclusion-in-memory
+  template:
+    metadata:
+      labels:
+        app: inclusion-in-memory
+    spec:
+      containers:
+        - name: user-container
+          image: ghcr.io/timosalm/emoji-inclusion:inclusion

@@ -1,4 +1,5 @@
 #!/bin/bash
 set -x
 
-envsubst < mr-helm-release-postgres.yaml | kubectl apply -f -
+kubectl create ns crossplane-and-servicebindings-1
+kubectl apply -f helm-release-postgres.yaml

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inclusion
+  namespace: crossplane-and-servicebindings-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inclusion
+  template:
+    metadata:
+      labels:
+        app: inclusion
+    spec:
+      containers:
+        - name: user-container
+          image: ghcr.io/timosalm/emoji-inclusion:inclusion
+          env: 
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:postgresql://${postgres.host}:${postgres.port}/${postgres.database}
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-2-connection-secrets
+                key: username
+          - name: POSTGRES_HOST
+            valueFrom:
+              secretKeyRef:
+                name: postgres-2-connection-secrets
+                key: host
+          - name: POSTGRES_PORT
+            valueFrom:
+              secretKeyRef:
+                name: postgres-2-connection-secrets
+                key: port
+          - name: POSTGRES_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: postgres-2-connection-secrets
+                key: database
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-2-connection-secrets
+                key: password

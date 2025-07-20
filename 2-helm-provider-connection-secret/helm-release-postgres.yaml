@@ -1,14 +1,17 @@
 apiVersion: helm.crossplane.io/v1beta1
 kind: Release
 metadata:
-  name: csb-postgres-2
+  name: postgres-2
+  namespace: crossplane-and-servicebindings-2
 spec:
-  forProvider:
+  providerConfigRef:
+     name: helm-provider
+  forProvider: # maps to the parameters of the external resource
     chart:
       name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 13.0.0
-    namespace: $DEMO_NS
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.7.20
+    namespace: crossplane-and-servicebindings-2
     values:
       primary:
         persistence:
@@ -22,37 +25,37 @@ spec:
           auth:
             username: default
             database: inclusion
-  connectionDetails:
+  connectionDetails: # Define connection details
   - apiVersion: v1
     kind: Service
-    name: csb-postgres-2-postgresql
-    namespace: $DEMO_NS
+    name: postgres-2-postgresql
+    namespace: crossplane-and-servicebindings-2
     fieldPath: spec.clusterIP
     toConnectionSecretKey: host
   - apiVersion: v1
     kind: Service
-    name: csb-postgres-2-postgresql
-    namespace: $DEMO_NS
+    name: postgres-2-postgresql
+    namespace: crossplane-and-servicebindings-2
     fieldPath: spec.ports[0].port
     toConnectionSecretKey: port
   - apiVersion: v1
     kind: Secret
-    name: csb-postgres-2-postgresql
-    namespace: $DEMO_NS
+    name: postgres-2-postgresql
+    namespace: crossplane-and-servicebindings-2
     fieldPath: data.password
     toConnectionSecretKey: password
   - apiVersion: apps/v1
     kind: StatefulSet
-    name: csb-postgres-2-postgresql
-    namespace: $DEMO_NS
+    name: postgres-2-postgresql
+    namespace: crossplane-and-servicebindings-2
     fieldPath: spec.template.spec.containers[0].env[4].value
     toConnectionSecretKey: username
   - apiVersion: apps/v1
     kind: StatefulSet
-    name: csb-postgres-2-postgresql
-    namespace: $DEMO_NS
+    name: postgres-2-postgresql
+    namespace: crossplane-and-servicebindings-2
     fieldPath: spec.template.spec.containers[0].env[7].value
     toConnectionSecretKey: database
-  writeConnectionSecretToRef:
-    name: csb-postgres-2-connection-secrets
-    namespace: $DEMO_NS
+  writeConnectionSecretToRef: # Provider saves connection details in the Kubernetes secret
+    name: postgres-2-connection-secrets
+    namespace: crossplane-and-servicebindings-2

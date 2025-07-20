@@ -1,6 +1,7 @@
 apiVersion: timosalm.de/v1alpha1
 kind: PostgreSQLDatabase
 metadata:
-  name: csb-postgres
+  name: postgres
+  namespace: crossplane-and-servicebindings-5
 spec:
   storage: 2

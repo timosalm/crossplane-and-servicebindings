@@ -1,8 +1,9 @@
 apiVersion: timosalm.de/v1alpha1
 kind: PostgreSQLDatabase
 metadata:
-  name: csb-postgres
+  name: postgres
+  namespace: crossplane-and-servicebindings-3
 spec:
   storage: 2
   writeConnectionSecretToRef:
-    name: csb-postgres-connection-secrets
+    name: postgres-connection-secrets

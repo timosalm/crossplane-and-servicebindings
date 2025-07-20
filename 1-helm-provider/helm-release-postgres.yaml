@@ -1,0 +1,18 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: postgres-1
+  namespace: crossplane-and-servicebindings-1
+spec:
+  forProvider: # maps to the parameters of the external resource
+    chart:
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.7.20
+    namespace: crossplane-and-servicebindings-1
+    values:
+      primary:
+        persistence:
+          size: 1Gi
+  providerConfigRef:
+     name: helm-provider
