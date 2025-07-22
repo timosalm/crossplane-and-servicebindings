@@ -7,7 +7,8 @@
 - Crossplane >= v1.13 < v.2.0
 - Crossplane Helm provider installed
 - [Service Binding for Kubernetes](https://github.com/servicebinding/runtime)
-- For demo mode [Demo Magic](https://github.com/paxtonhare/demo-magic)
+- For demo script: [Demo Magic](https://github.com/paxtonhare/demo-magic), [krew](https://krew.sigs.k8s.io), [kube-lineage installed via krew](https://github.com/tohjustin/kube-lineage), [kubectl-view-secret
+installed via krew](https://github.com/tohjustin/kube-lineage)
 
 ## Demo
 
