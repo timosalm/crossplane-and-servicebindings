@@ -47,6 +47,8 @@ fi
 if [[ -z "$1" || "$1" == "3" ]]; then
   pei "(cd 3-claims && ./apply.sh)"
   wait
+  pei "kubectl get function"
+  wait
   pei "kubectl get postgresqldatabase -n crossplane-and-servicebindings-3"
   wait
   pei "kubectl get xpostgresqldatabase -n crossplane-and-servicebindings-3"

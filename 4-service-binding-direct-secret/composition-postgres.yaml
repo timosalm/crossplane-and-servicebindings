@@ -7,152 +7,179 @@ spec:
     apiVersion: timosalm.de/v2
     kind: xPostgreSQLDatabase
   writeConnectionSecretsToNamespace: crossplane-system
-  resources:
-    - name: database
-      base:
-        apiVersion: helm.crossplane.io/v1beta1
-        kind: Release
-        metadata:
-          name: ""
-        spec:
-          providerConfigRef:
-            name: helm-provider
-          forProvider:
-            chart:
-              name: postgresql
-              repository: oci://registry-1.docker.io/bitnamicharts
-              version: 16.7.20
-            namespace: ""
-            values:
-              primary:
-                persistence:
-                  size: 1Gi
-                pgHbaConfiguration: |-
-                  local all all trust
-                  host all all localhost trust
-                  host inclusion default 0.0.0.0/0 password
-              global:
-                postgresql:
-                  auth:
-                    username: default
-                    database: inclusion
-          connectionDetails:
-          - apiVersion: v1
-            kind: Service
-            name: ""
-            namespace: ""
-            fieldPath: spec.clusterIP
-            toConnectionSecretKey: host
-          - apiVersion: v1
-            kind: Service
-            name: ""
-            namespace: ""
-            fieldPath: spec.ports[0].port
-            toConnectionSecretKey: port
-          - apiVersion: v1
-            kind: Secret
-            name: ""
-            namespace: ""
-            fieldPath: data.password
-            toConnectionSecretKey: password
-          - apiVersion: apps/v1
-            kind: StatefulSet
-            name: ""
-            namespace: ""
-            fieldPath: spec.template.spec.containers[0].env[4].value
-            toConnectionSecretKey: username
-          - apiVersion: apps/v1
-            kind: StatefulSet
-            name: ""
-            namespace: ""
-            fieldPath: spec.template.spec.containers[0].env[7].value
-            toConnectionSecretKey: database
-          writeConnectionSecretToRef:
-            name: ""
-            namespace: crossplane-system
-      connectionDetails:
-      - fromConnectionSecretKey: host
-      - fromConnectionSecretKey: port
-      - fromConnectionSecretKey: database
-      - fromConnectionSecretKey: username
-      - fromConnectionSecretKey: password
-      - name: type
-        value: postgresql
-      - name: provider
-        value: bitnami
-      patches:
-      - type: FromCompositeFieldPath
-        fromFieldPath: spec.storage
-        toFieldPath: spec.forProvider.values.primary.persistence.size
-        transforms:
-        - string:
-            fmt: '%dGi'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.name
-        toFieldPath: metadata.name
-        type: FromCompositeFieldPath
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.forProvider.namespace
-        type: FromCompositeFieldPath
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.connectionDetails[0].namespace
-        type: FromCompositeFieldPath
-      - type: FromCompositeFieldPath
-        fromFieldPath: metadata.name
-        toFieldPath: spec.connectionDetails[0].name
-        transforms:
-        - string:
-            fmt: '%s-postgresql'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.connectionDetails[1].namespace
-        type: FromCompositeFieldPath
-      - type: FromCompositeFieldPath
-        fromFieldPath: metadata.name
-        toFieldPath: spec.connectionDetails[1].name
-        transforms:
-        - string:
-            fmt: '%s-postgresql'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.connectionDetails[2].namespace
-        type: FromCompositeFieldPath
-      - type: FromCompositeFieldPath
-        fromFieldPath: metadata.name
-        toFieldPath: spec.connectionDetails[2].name
-        transforms:
-        - string:
-            fmt: '%s-postgresql'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.connectionDetails[3].namespace
-        type: FromCompositeFieldPath
-      - type: FromCompositeFieldPath
-        fromFieldPath: metadata.name
-        toFieldPath: spec.connectionDetails[3].name
-        transforms:
-        - string:
-            fmt: '%s-postgresql'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
-        toFieldPath: spec.connectionDetails[4].namespace
-        type: FromCompositeFieldPath
-      - type: FromCompositeFieldPath
-        fromFieldPath: metadata.name
-        toFieldPath: spec.connectionDetails[4].name
-        transforms:
-        - string:
-            fmt: '%s-postgresql'
-            type: Format
-          type: string
-      - fromFieldPath: metadata.name
-        toFieldPath: spec.writeConnectionSecretToRef.name
-        transforms:
-        - type: string
-          string:
-            fmt: "%s-database-secret"
+  mode: Pipeline
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: database
+            base:
+              apiVersion: helm.crossplane.io/v1beta1
+              kind: Release
+              metadata:
+                name: ""
+              spec:
+                providerConfigRef:
+                  name: helm-provider
+                forProvider:
+                  chart:
+                    name: postgresql
+                    repository: oci://registry-1.docker.io/bitnamicharts
+                    version: 16.7.20
+                  namespace: ""
+                  values:
+                    primary:
+                      persistence:
+                        size: 1Gi
+                      pgHbaConfiguration: |-
+                        local all all trust
+                        host all all localhost trust
+                        host inclusion default 0.0.0.0/0 password
+                    global:
+                      postgresql:
+                        auth:
+                          username: default
+                          database: inclusion
+                connectionDetails:
+                  - apiVersion: v1
+                    kind: Service
+                    name: ""
+                    namespace: ""
+                    fieldPath: spec.clusterIP
+                    toConnectionSecretKey: host
+                  - apiVersion: v1
+                    kind: Service
+                    name: ""
+                    namespace: ""
+                    fieldPath: spec.ports[0].port
+                    toConnectionSecretKey: port
+                  - apiVersion: v1
+                    kind: Secret
+                    name: ""
+                    namespace: ""
+                    fieldPath: data.password
+                    toConnectionSecretKey: password
+                  - apiVersion: apps/v1
+                    kind: StatefulSet
+                    name: ""
+                    namespace: ""
+                    fieldPath: spec.template.spec.containers[0].env[4].value
+                    toConnectionSecretKey: username
+                  - apiVersion: apps/v1
+                    kind: StatefulSet
+                    name: ""
+                    namespace: ""
+                    fieldPath: spec.template.spec.containers[0].env[7].value
+                    toConnectionSecretKey: database
+                writeConnectionSecretToRef:
+                  name: ""
+                  namespace: crossplane-system
+            connectionDetails:
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: username
+              name: username
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: host
+              name: host
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: port
+              name: port
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: database
+              name: database
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: username
+              name: username
+            - type: FromConnectionSecretKey
+              fromConnectionSecretKey: password
+              name: password
+            - type: FromValue
+              name: type
+              value: postgresql
+            - type: FromValue
+              name: provider
+              value: bitnami
+            patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: spec.storage
+              toFieldPath: spec.forProvider.values.primary.persistence.size
+              transforms:
+              - type: convert
+                convert:
+                  toType: string
+              - string:
+                  fmt: '%sGi'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.name
+              toFieldPath: metadata.name
+              type: FromCompositeFieldPath
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.forProvider.namespace
+              type: FromCompositeFieldPath
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.connectionDetails[0].namespace
+              type: FromCompositeFieldPath
+            - type: FromCompositeFieldPath
+              fromFieldPath: metadata.name
+              toFieldPath: spec.connectionDetails[0].name
+              transforms:
+              - string:
+                  fmt: '%s-postgresql'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.connectionDetails[1].namespace
+              type: FromCompositeFieldPath
+            - type: FromCompositeFieldPath
+              fromFieldPath: metadata.name
+              toFieldPath: spec.connectionDetails[1].name
+              transforms:
+              - string:
+                  fmt: '%s-postgresql'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.connectionDetails[2].namespace
+              type: FromCompositeFieldPath
+            - type: FromCompositeFieldPath
+              fromFieldPath: metadata.name
+              toFieldPath: spec.connectionDetails[2].name
+              transforms:
+              - string:
+                  fmt: '%s-postgresql'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.connectionDetails[3].namespace
+              type: FromCompositeFieldPath
+            - type: FromCompositeFieldPath
+              fromFieldPath: metadata.name
+              toFieldPath: spec.connectionDetails[3].name
+              transforms:
+              - string:
+                  fmt: '%s-postgresql'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.labels["crossplane.io/claim-namespace"]
+              toFieldPath: spec.connectionDetails[4].namespace
+              type: FromCompositeFieldPath
+            - type: FromCompositeFieldPath
+              fromFieldPath: metadata.name
+              toFieldPath: spec.connectionDetails[4].name
+              transforms:
+              - string:
+                  fmt: '%s-postgresql'
+                  type: Format
+                type: string
+            - fromFieldPath: metadata.name
+              toFieldPath: spec.writeConnectionSecretToRef.name
+              transforms:
+              - type: string
+                string:
+                  fmt: "%s-database-secret"
+                  type: Format
