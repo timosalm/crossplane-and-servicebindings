@@ -7,9 +7,10 @@ export DEMO_PROMPT="${GREEN}➜ ${CYAN}\W ${COLOR_RESET}"
 PROMPT_TIMEOUT=0
 PREV_KEY=$'\x70' # p
 
-# hide the evidence
 clear
 
+
+# 1 helm provider
 pei "(cd 1-helm-provider && ./apply.sh)"
 wait
 pei "kubectl get providers"
@@ -29,6 +30,7 @@ pei "kubectl view-secret postgres-1-postgresql -n crossplane-and-servicebindings
 wait
 pei "(cd 1-helm-provider && ./clean-up.sh)"
 
+# 2 helm provider with connection secret
 pei "(cd 2-helm-provider-connection-secret && ./apply.sh)"
 wait
 pei "kubectl get deployment -n crossplane-and-servicebindings-2"
@@ -39,6 +41,7 @@ pei "kubectl view-secret postgres-connection-secrets -n crossplane-and-servicebi
 wait
 pei "(cd 2-helm-provider-connection-secret && ./clean-up.sh)"
 
+# 3 claims
 pei "(cd 3-claims && ./apply.sh)"
 wait
 pei "kubectl get postgresqldatabase -n crossplane-and-servicebindings-3"
@@ -49,6 +52,7 @@ pei "kubectl get release.helm.crossplane.io"
 wait
 pei "(cd 3-claims && ./clean-up.sh)"
 
+# 4 service binding direct secret
 pei "(cd 4-service-binding-direct-secret && ./apply.sh)"
 wait
 pei "kubectl get secret -n crossplane-and-servicebindings-4"
@@ -59,6 +63,7 @@ pei "kubectl get deploy -n crossplane-and-servicebindings-4 -o yaml"
 wait
 pei "(cd 4-service-binding-direct-secret && ./clean-up.sh)"
 
+# 5 service binding provisioned service
 pei "(cd 5-service-binding-provisioned-service && ./apply.sh)"
 wait
 pei "kubectl get postgresqldatabase -n crossplane-and-servicebindings-5"
