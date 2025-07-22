@@ -11,7 +11,7 @@ spec:
   # The schema of each version can’t change any existing fields. 
   # Breaking schema changes between versions requires the use of conversion webhooks
   # Crossplane recommends implementing breaking schema changes as brand new XRDs.
-  - name: v1alpha1
+  - name: v1
     schema:
       openAPIV3Schema:
         type: object

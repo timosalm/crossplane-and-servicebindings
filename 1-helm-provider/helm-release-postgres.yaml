@@ -2,7 +2,6 @@ apiVersion: helm.crossplane.io/v1beta1
 kind: Release
 metadata:
   name: postgres-1
-  namespace: crossplane-and-servicebindings-1
 spec:
   forProvider: # maps to the parameters of the external resource
     chart:

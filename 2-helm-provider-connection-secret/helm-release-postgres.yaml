@@ -57,5 +57,5 @@ spec:
     fieldPath: spec.template.spec.containers[0].env[7].value
     toConnectionSecretKey: database
   writeConnectionSecretToRef: # Provider saves connection details in the Kubernetes secret
-    name: postgres-2-connection-secrets
+    name: postgres-connection-secrets
     namespace: crossplane-and-servicebindings-2

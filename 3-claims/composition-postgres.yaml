@@ -1,10 +1,10 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: xpostgresqldatabases.timosalm.de
+  name: xpostgresqldatabases.timosalm.de-v1
 spec:
   compositeTypeRef:
-    apiVersion: timosalm.de/v1alpha1
+    apiVersion: timosalm.de/v1
     kind: xPostgreSQLDatabase
   writeConnectionSecretsToNamespace: crossplane-system
   resources:

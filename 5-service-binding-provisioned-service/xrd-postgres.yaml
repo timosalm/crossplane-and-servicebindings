@@ -8,7 +8,35 @@ spec:
     kind: xPostgreSQLDatabase
     plural: xpostgresqldatabases
   versions:
-  - name: v1alpha1
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              storage:
+                default: 1
+                description: The storage capacity of the database in gigabytes
+                type: integer
+    served: true
+    referenceable: false
+  - name: v2
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              storage:
+                default: 1
+                description: The storage capacity of the database in gigabytes
+                type: integer
+    served: true
+    referenceable: false
+  - name: v3
     schema:
       openAPIV3Schema:
         type: object

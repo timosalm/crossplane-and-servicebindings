@@ -22,25 +22,25 @@ spec:
           - name: SPRING_DATASOURCE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: postgres-2-connection-secrets
+                name: postgres-connection-secrets
                 key: username
           - name: POSTGRES_HOST
             valueFrom:
               secretKeyRef:
-                name: postgres-2-connection-secrets
+                name: postgres-connection-secrets
                 key: host
           - name: POSTGRES_PORT
             valueFrom:
               secretKeyRef:
-                name: postgres-2-connection-secrets
+                name: postgres-connection-secrets
                 key: port
           - name: POSTGRES_DATABASE
             valueFrom:
               secretKeyRef:
-                name: postgres-2-connection-secrets
+                name: postgres-connection-secrets
                 key: database
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: postgres-2-connection-secrets
+                name: postgres-connection-secrets
                 key: password
